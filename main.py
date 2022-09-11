@@ -1,14 +1,13 @@
 from snp_info import load_dataset
 from pandas import DataFrame
 from numpy import arange, square, ndarray
-from statsmodels.api import OLS
 from collections import Counter as C
 from time import time as t
 from warnings import filterwarnings as fw; fw("ignore")
 from random import sample
 from numpy import array
 from numpy.random import shuffle
-from statsmodels.api import add_constant as const
+from statsmodels.api import add_constant as const, OLS
 from sys import argv
 
 def randomize(df : DataFrame, with_replacement : bool = False, subset_feature : bool = False, *args, **kwargs) -> DataFrame:
