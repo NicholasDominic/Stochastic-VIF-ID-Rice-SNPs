@@ -58,27 +58,12 @@ class SNPinfo():
         joint_entropy_ = round(self.entropy(self.snps[self.snps.columns[:end_idx]].T.values, joint=True), 5)
 
         mutual_info_ = [round(mis(self.snps[i], self.snps[data[len(data)-1]]), 5) for i in data]
-        lower_bound_mi, upper_bound_mi = joint_entropy_+max(mutual_info_), joint_entropy_+round(sum(mutual_info_), 5)
+        joint_entropy_mi = self.entropy(self.snps.T.values[:-1], joint=True)
+        joint_entropy_lower_bound = joint_entropy_mi + self.entropy(self.snps.T.values[-1]) - max(mutual_info_)
+        joint_entropy_upper_bound = joint_entropy_mi + self.entropy(self.snps.T.values[-1]) - round(sum(mutual_info_), 5)
 
         # total correlation, or multi-information
         total_corr_ = round(sum(entropy_) - joint_entropy_, 5)
-        est_total_corr_lower = round(sum(entropy_) - lower_bound_mi, 5)
-        est_total_corr_upper = round(sum(entropy_) - upper_bound_mi, 5)
+        est_total_corr_lower = round(sum(entropy_) - joint_entropy_lower_bound, 5)
+        est_total_corr_upper = round(sum(entropy_) - joint_entropy_upper_bound, 5)
         return joint_entropy_, total_corr_, est_total_corr_lower, est_total_corr_upper
-    
-    # je, tc, etcl, etcu = [], [], [], []
-    # for i in range(1, len(snps.columns)+1):
-    #     joint_entropy_, total_corr_, est_total_corr_lower, est_total_corr_upper = snp_combined_info(i)
-
-    #     je.append(joint_entropy_)
-    #     tc.append(total_corr_)
-    #     etcl.append(est_total_corr_lower)
-    #     etcu.append(est_total_corr_upper)
-    #     print(i)
-
-    # DataFrame({
-    #     "joint_entropy_" : je,
-    #     "total_corr_" : tc,
-    #     "est_total_corr_lower" : etcl,
-    #     "est_total_corr_upper" : etcu
-    # }).to_csv("snps_combined_information.csv", index=False)
